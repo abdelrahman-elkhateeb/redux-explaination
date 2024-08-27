@@ -4,8 +4,10 @@ export default function App() {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [balance, setBalance] = useState(0);
   const [loan, setLoan] = useState(0);
+
   function handleOpenAccount() {
     setIsAccountOpen(true);
+    setBalance(500);
   }
 
   function handleCloseAccount() {
@@ -36,7 +38,7 @@ export default function App() {
     }
   }
 
-  const classNameBtn = "bg-green-400 rounded text-white p-2";
+  const classNameBtn = "rounded text-white p-2";
 
   return (
     <div className="flex flex-col justify-center items-center gap-3">
@@ -46,7 +48,9 @@ export default function App() {
 
       <p>
         <button
-          className={`${classNameBtn} ${isAccountOpen ? "bg-gray-500" : ""}`}
+          className={`${classNameBtn} ${
+            isAccountOpen ? "bg-gray-600" : "bg-green-500"
+          }`}
           onClick={handleOpenAccount}
           disabled={isAccountOpen}
         >
@@ -55,7 +59,9 @@ export default function App() {
       </p>
       <p>
         <button
-          className={`${classNameBtn} ${!isAccountOpen ? "bg-gray-500" : ""}`}
+          className={`${classNameBtn} ${
+            isAccountOpen ? "bg-green-500" : "bg-gray-600"
+          }`}
           onClick={handleDeposit}
           disabled={!isAccountOpen}
         >
@@ -64,7 +70,9 @@ export default function App() {
       </p>
       <p>
         <button
-          className={`${classNameBtn} ${!isAccountOpen ? "bg-gray-500" : ""}`}
+          className={`${classNameBtn} ${
+            isAccountOpen ? "bg-green-500" : "bg-gray-600"
+          }`}
           onClick={handleWithdraw}
           disabled={!isAccountOpen}
         >
@@ -73,7 +81,9 @@ export default function App() {
       </p>
       <p>
         <button
-          className={`${classNameBtn} ${!isAccountOpen ? "bg-gray-500" : ""}`}
+          className={`${classNameBtn} ${
+            isAccountOpen ? "bg-green-500" : "bg-gray-600"
+          }`}
           onClick={handleRequestLoan}
           disabled={!isAccountOpen}
         >
@@ -82,7 +92,9 @@ export default function App() {
       </p>
       <p>
         <button
-          className={`${classNameBtn} ${!isAccountOpen ? "bg-gray-500" : ""}`}
+          className={`${classNameBtn} ${
+            isAccountOpen ? "bg-green-500" : "bg-gray-600"
+          }`}
           onClick={handlePayLoan}
           disabled={!isAccountOpen}
         >
@@ -91,8 +103,8 @@ export default function App() {
       </p>
       <p>
         <button
-          className={`${classNameBtn} bg-red-400 ${
-            !isAccountOpen ? "bg-gray-500" : ""
+          className={`${classNameBtn} bg-red-600 ${
+            !isAccountOpen && "bg-gray-600"
           }`}
           onClick={handleCloseAccount}
           disabled={!isAccountOpen}

@@ -1,43 +1,55 @@
-import { useState } from "react";
+import { useReducer } from "react";
 
-export default function App() {
-  const [isAccountOpen, setIsAccountOpen] = useState(false);
-  const [balance, setBalance] = useState(0);
-  const [loan, setLoan] = useState(0);
-  function handleOpenAccount() {
-    setIsAccountOpen(true);
-  }
+const initialState = {
+  balance: 0,
+  loan: 0,
+  isAccountOpen: false,
+};
 
-  function handleCloseAccount() {
-    if (loan > 0) return;
-    setIsAccountOpen(false);
-    setBalance(0);
-  }
-
-  function handleDeposit() {
-    setBalance(balance + 150);
-  }
-
-  function handleWithdraw() {
-    if (balance <= 0) return;
-    setBalance(balance - 50);
-  }
-
-  function handleRequestLoan() {
-    const deposit = 5000;
-    setLoan(loan + deposit);
-    setBalance(balance + deposit);
-  }
-
-  function handlePayLoan() {
-    if (balance >= loan) {
-      setBalance(balance - loan);
-      setLoan(0);
+function App() {
+  function reducer(state, action) {
+    switch (action.type) {
+      case "openAccount":
+        return {
+          ...state,
+          balance: 500,
+          isAccountOpen: true,
+        };
+      case "deposit":
+        return { ...state, balance: state.balance + action.payload };
+      case "withdraw":
+        if (state.balance < action.payload) {
+          return state;
+        }
+        return { ...state, balance: state.balance - action.payload };
+      case "requestLoan":
+        return {
+          ...state,
+          balance: state.balance + action.payload,
+          loan: state.loan + action.payload,
+        };
+      case "payLoan":
+        if (state.loan > state.balance) {
+          return state;
+        }
+        return { ...state, balance: state.balance - state.loan, loan: 0 };
+      case "closeAccount":
+        if (state.loan > state.balance) {
+          return state;
+        }
+        return { ...state, balance: 0, loan: 0, isAccountOpen: false };
+      case "applyLoan":
+      default:
+        return state;
     }
   }
 
-  const classNameBtn = "bg-green-400 rounded text-white p-2";
-  const disabled = "bg-gray-500";
+  const [{ balance, loan, isAccountOpen }, dispatch] = useReducer(
+    reducer,
+    initialState,
+  );
+
+  const classNameBtn = "rounded text-white p-2";
 
   return (
     <div className="flex flex-col justify-center items-center gap-3">
@@ -47,8 +59,12 @@ export default function App() {
 
       <p>
         <button
-          className={`${classNameBtn} ${isAccountOpen ? disabled : ""}`}
-          onClick={handleOpenAccount}
+          className={`${classNameBtn} ${
+            isAccountOpen ? "bg-gray-600" : "bg-green-500"
+          }`}
+          onClick={() => {
+            dispatch({ type: "openAccount" });
+          }}
           disabled={isAccountOpen}
         >
           Open account
@@ -56,8 +72,12 @@ export default function App() {
       </p>
       <p>
         <button
-          className={`${classNameBtn} ${!isAccountOpen ? disabled : ""}`}
-          onClick={handleDeposit}
+          className={`${classNameBtn} ${
+            isAccountOpen ? "bg-green-500" : "bg-gray-600"
+          }`}
+          onClick={() => {
+            dispatch({ type: "deposit", payload: 150 });
+          }}
           disabled={!isAccountOpen}
         >
           Deposit 150
@@ -65,8 +85,12 @@ export default function App() {
       </p>
       <p>
         <button
-          className={`${classNameBtn} ${!isAccountOpen ? disabled : ""}`}
-          onClick={handleWithdraw}
+          className={`${classNameBtn} ${
+            isAccountOpen ? "bg-green-500" : "bg-gray-600"
+          }`}
+          onClick={() => {
+            dispatch({ type: "withdraw", payload: 50 });
+          }}
           disabled={!isAccountOpen}
         >
           Withdraw 50
@@ -74,8 +98,12 @@ export default function App() {
       </p>
       <p>
         <button
-          className={`${classNameBtn} ${!isAccountOpen ? disabled : ""}`}
-          onClick={handleRequestLoan}
+          className={`${classNameBtn} ${
+            isAccountOpen ? "bg-green-500" : "bg-gray-600"
+          }`}
+          onClick={() => {
+            dispatch({ type: "requestLoan", payload: 5000 });
+          }}
           disabled={!isAccountOpen}
         >
           Request a loan of 5000
@@ -83,8 +111,12 @@ export default function App() {
       </p>
       <p>
         <button
-          className={`${classNameBtn} ${!isAccountOpen ? disabled : ""}`}
-          onClick={handlePayLoan}
+          className={`${classNameBtn} ${
+            isAccountOpen ? "bg-green-500" : "bg-gray-600"
+          }`}
+          onClick={() => {
+            dispatch({ type: "payLoan" });
+          }}
           disabled={!isAccountOpen}
         >
           Pay loan
@@ -92,10 +124,12 @@ export default function App() {
       </p>
       <p>
         <button
-          className={`${classNameBtn} bg-red-400 ${
-            !isAccountOpen ? disabled : ""
+          className={`${classNameBtn} bg-red-600 ${
+            !isAccountOpen && "bg-gray-600"
           }`}
-          onClick={handleCloseAccount}
+          onClick={() => {
+            dispatch({ type: "closeAccount" });
+          }}
           disabled={!isAccountOpen}
         >
           Close account
@@ -104,3 +138,5 @@ export default function App() {
     </div>
   );
 }
+
+export default App;

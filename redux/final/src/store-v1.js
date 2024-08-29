@@ -67,7 +67,7 @@ const rootReducer = combineReducers({
   customer: customerReducer,
 });
 
-const store = createStore(rootReducerf);
+const store = createStore(rootReducer);
 
 function deposit(amount) {
   return {
@@ -109,3 +109,6 @@ function updateName(fullName) {
     payload: fullName,
   };
 }
+
+store.dispatch(createCustomer("abdelrahman elkhateeb", "303092912"));
+console.log(store.getState());
